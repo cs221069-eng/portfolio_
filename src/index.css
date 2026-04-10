@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0bdada;
+  --color-background-light: #f5f8f8;
+  --color-background-dark: #102222;
+  --font-display: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-display);
+  }
+}
+
+.skill-card:hover {
+  border-color: #0bdada;
+  background-color: rgba(11, 218, 218, 0.1);
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
