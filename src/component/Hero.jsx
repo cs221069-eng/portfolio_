@@ -1,33 +1,31 @@
 import { useEffect, useState } from 'react'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
-
-const fallbackHero = {
-  status: 'Available for Work',
-  description:
-    'Computer Science Student & MERN Stack Developer. Passionate about building scalable, user-centric web applications with modern digital solutions.',
-}
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://portfolio-backend-eight-mu.vercel.app'
 
 function Hero() {
-  const [heroData, setHeroData] = useState(fallbackHero)
+  const [heroData, setHeroData] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchHeroData = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/api/hero`)
 
+        if (response.status === 204) {
+          setHeroData(null)
+          return
+        }
+
         if (!response.ok) {
           return
         }
 
         const data = await response.json()
-
-        setHeroData({
-          status: data.hero?.status || fallbackHero.status,
-          description: data.hero?.description || fallbackHero.description,
-        })
+        setHeroData(data.hero || null)
       } catch (error) {
         console.error('Failed to fetch hero data:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -37,15 +35,27 @@ function Hero() {
   return (
     <section className="mx-auto flex max-w-7xl flex-col-reverse items-center gap-12 px-6 py-16 md:py-24 lg:flex-row lg:py-32">
       <div className="flex-1 space-y-6">
-        <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-primary">
-          {heroData.status}
-        </div>
+        {isLoading ? (
+          <div className="h-8 w-40 animate-pulse rounded-full bg-primary/15" />
+        ) : heroData?.status ? (
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-primary">
+            {heroData.status}
+          </div>
+        ) : null}
         <h1 className="text-4xl font-black leading-tight tracking-tighter md:text-6xl lg:text-7xl">
           Muhammad Moiz <span className="text-primary">Siddiqui</span>
         </h1>
-        <p className="max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-400 md:text-xl">
-          {heroData.description}
-        </p>
+        {isLoading ? (
+          <div className="max-w-2xl space-y-3">
+            <div className="h-4 w-full animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
+            <div className="h-4 w-11/12 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
+            <div className="h-4 w-9/12 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
+          </div>
+        ) : heroData?.description ? (
+          <p className="max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-400 md:text-xl">
+            {heroData.description}
+          </p>
+        ) : null}
         <div className="flex flex-wrap gap-4 pt-4">
           <a
             className="flex items-center gap-2 rounded-xl bg-primary px-8 py-4 font-bold text-background-dark transition-transform hover:scale-105"
@@ -61,6 +71,9 @@ function Hero() {
             Contact Me
           </a>
         </div>
+        {!isLoading && !heroData ? (
+          <p className="text-sm text-slate-500 dark:text-slate-400">Hero content abhi admin panel se add nahi hua.</p>
+        ) : null}
       </div>
       <div className="w-full max-w-md flex-1 lg:max-w-none">
         <div className="group relative">

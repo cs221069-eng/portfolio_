@@ -7,7 +7,7 @@ function Skills() {
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/skill/all`)
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'https://portfolio-backend-eight-mu.vercel.app'}/api/skill/all`)
         setSkills(response.data)
       } catch (error) {
         console.error('Error fetching skills:', error)
